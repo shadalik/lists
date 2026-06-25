@@ -1,2 +1,1 @@
-vless://dba50bb9-2456-4128-8632-f7ba1e6a7ab5@78.41.111.87:443?encryption=none&type=ws&security=tls&path=%2Fapi%2Fuser&host=s10211.cdn.ngenix.net&fp=qq&sni=s10211.cdn.ngenix.net&alpn=http%2F1.1#%F0%9F%87%A9%F0%9F%87%AA%20Germany%20%E2%80%94%20%2327
-vless://5bddd0cc-1354-4532-b681-2ad2a136f631@93.93.88.28:443?encryption=none&type=ws&security=tls&path=%2Fv1%2Fdata%2Fsync%2F&fp=edge&sni=cdn-discover.truesight.store&alpn=http%2F1.1#%F0%9F%87%B3%F0%9F%87%B1%20The%20Netherlands%20%E2%80%94%20%23170
+vless://dba50bb9-2456-4128-8632-f7ba1e6a7ab5@78.41.111.87:443?encryption=none&type=ws&security=tls&path=%2Fapi%2Fuser&fp=qq&sni=s10211.cdn.ngenix.net#%F0%9F%87%A9%F0%9F%87%AA%20Germany%20%E2%80%94%20%2326
