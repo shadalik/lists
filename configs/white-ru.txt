@@ -1,2 +1,5 @@
 vless://bb229808-c207-428c-a398-0b4bf30f29be@109.69.20.228:8443?encryption=none&type=raw&security=tls&sni=vpn.oplatasite.ru#%F0%9F%87%B7%F0%9F%87%BA%20Beget%20%E2%80%94%20%237
+vless://5524d9b2-afb0-47dc-ac32-4c04920e5574@195.208.65.195:443?encryption=none&type=ws&security=tls&path=%2Fv1%2Fdata%2Fsync%2F&fp=chrome&sni=cdn-discover.truesight.store&alpn=http%2F1.1#%F0%9F%87%B3%F0%9F%87%B1%20The%20Netherlands%20%E2%80%94%20%23194
+vless://bb229808-c207-428c-a398-0b4bf30f29be@109.69.20.228:8443?encryption=none&type=raw&security=tls&sni=vpn.oplatasite.ru#%F0%9F%87%B7%F0%9F%87%BA%20Beget%20%E2%80%94%20%236
 vless://bb229808-c207-428c-a398-0b4bf30f29be@109.69.20.228:8443?encryption=none&type=raw&security=tls&fp=qq&sni=vpn.oplatasite.ru#%F0%9F%87%B7%F0%9F%87%BA%20Beget%20%E2%80%94%20%237
+vless://bb229808-c207-428c-a398-0b4bf30f29be@109.69.20.228:8443?encryption=none&type=raw&security=tls&fp=edge&sni=vpn.oplatasite.ru#%F0%9F%87%B7%F0%9F%87%BA%20Beget%20%E2%80%94%20%238
