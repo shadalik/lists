@@ -54,9 +54,15 @@ jobs:
             x86_64) ARCH="amd64" ;;
             aarch64) ARCH="arm64" ;;
           esac
-          VERSION=$(curl -sL "https://api.github.com/repos/kutovoys/xray-checker/releases/latest" | jq -r '.tag_name')
+          VERSION=$(curl -sL "https://api.github.com/repos/kutovoys/xray-checker/releases/latest" | jq -r '.tag_name // empty' 2>/dev/null || true)
+          if [ -z "$VERSION" ]; then
+            echo "GitHub API unavailable, resolving version via redirect..."
+            VERSION=$(curl -sIL -o /dev/null -w '%{url_effective}' "https://github.com/kutovoys/xray-checker/releases/latest" | sed -E 's|.*/tag/||')
+          fi
           echo "Downloading xray-checker $VERSION for $ARCH"
-          curl -sL "https://github.com/kutovoys/xray-checker/releases/download/${VERSION}/xray-checker-${VERSION}-linux-${ARCH}.tar.gz" | tar xz
+          curl -sL -o xray-checker.tar.gz "https://github.com/kutovoys/xray-checker/releases/download/${VERSION}/xray-checker-${VERSION}-linux-${ARCH}.tar.gz"
+          tar xzf xray-checker.tar.gz
+          rm -f xray-checker.tar.gz
           chmod +x xray-checker
           ./xray-checker --version
 
@@ -87,6 +93,15 @@ jobs:
             fi
 
             echo "  Checking $TOTAL configs with Xray Checker (target=$TARGET)..."
+
+            # Ограничиваем пул проверки случайной выборкой, чтобы не упереться в timeout джоба
+            local CHECK_LIMIT=$((TARGET * 10 + 100))
+            if [ "$TOTAL" -gt "$CHECK_LIMIT" ]; then
+              shuf -n "$CHECK_LIMIT" "$TMPFIXED" > "$TMPFIXED.sample"
+              mv "$TMPFIXED.sample" "$TMPFIXED"
+              TOTAL=$CHECK_LIMIT
+              echo "  Limited check pool to $TOTAL random configs"
+            fi
 
             # Кодируем в Base64 и раздаём через локальный HTTP-сервер
             local BASE64FILE=$(mktemp)
@@ -130,7 +145,7 @@ jobs:
               local STABLE_POLLS=0
               local MAX_STABLE=5  # 5 поллов × 5 сек = 25 сек стабильности
               local POLLS=0
-              local MAX_POLLS=480
+              local MAX_POLLS=150
 
               while [ "$POLLS" -lt "$MAX_POLLS" ] && [ "$STABLE_POLLS" -lt "$MAX_STABLE" ]; do
                 local STATUS=$(curl -sf http://localhost:2112/api/v1/status 2>/dev/null)
@@ -312,7 +327,7 @@ jobs:
               for (( si=0; si<SRC_COUNT; si++ )); do
                 local URL=$(echo "$ENTRY" | jq -r ".sources[$si]")
                 echo "  <- $URL (protocols=$PROTOCOLS, count=$ITEMS, random=$RANDOMIZE)"
-                curl -sL "$URL" | grep -E "$GREP_PATTERN" >> "$TMPRAW"
+                curl -sL "$URL" | grep -E "$GREP_PATTERN" >> "$TMPRAW" || true
               done
             done < <(jq -c ".lists[] | select(.filename == \"$FILENAME\")" sources.json)
 
@@ -367,7 +382,7 @@ jobs:
             echo "=== $INPUT_FILENAME: target=$COUNT, protocols=$PROTOCOLS ==="
             GREP_PATTERN="^($(echo "$PROTOCOLS" | tr ',' '|'))://"
             TMPRAW=$(mktemp)
-            curl -sL "$INPUT_URL" | grep -E "$GREP_PATTERN" > "$TMPRAW"
+            curl -sL "$INPUT_URL" | grep -E "$GREP_PATTERN" > "$TMPRAW" || true
             mkdir -p configs
             OUTFILE="configs/$INPUT_FILENAME"
             if [ "$INPUT_CHECKER" = "tcp" ]; then
